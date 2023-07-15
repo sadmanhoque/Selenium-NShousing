@@ -6,6 +6,7 @@ content = f.read()
 #soup = BeautifulSoup(content, 'html.parser')
 #print(soup.select('formValueSmall'))
 
+#going through all the table layers in the webpage until we get to the table with data
 soup = BeautifulSoup(content, 'lxml')
 tableOne = soup.find_all('table')[1]
 tableTwo = tableOne.find_all('tr')[0]
@@ -19,12 +20,14 @@ textHeader = (tableFour.find_all('tr')[1]).text
 parsedTextHeader = textHeader.split(' ', 1)
 numberOfProperty = int(parsedTextHeader[0])
 #print(numberOfProperty)
+numberOfProperty = numberOfProperty * 56
 
-for x in range(numberOfProperty):
-    print(x)
+#Looping through each row now
+#for x in range(0, numberOfProperty, 56):
+#    print(x)
 
-#Make a loop here to go through each row as each represents a property
 rowOne = tableSix.find_all('tr')[1]
+
 pid = rowOne.find_all('td')[2]
 
 type = rowOne.find_all('td')[4]
