@@ -138,12 +138,7 @@ for a in range(len(fileList)):
         csvString += "\n"
         #print(csvString)
 
-    #saving csv format text to file
-    #file_path = 'sampleOutput.csv'
-    #with open(file_path, 'w', encoding='utf-8') as file:
-    #    file.append(csvString)
-
     #appending to an existing blank csv file
-    #file1 = open("sampleOutput.csv", "w")
-    #file1.writelines(csvString + "\n")
-    #file1.close()
+    file1 = open("sampleOutput.csv", "a")
+    file1.write(csvString)
+    file1.close()
