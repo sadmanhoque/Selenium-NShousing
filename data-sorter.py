@@ -26,35 +26,35 @@ textHeader = (tableFour.find_all('tr')[1]).text
 parsedTextHeader = textHeader.split(' ', 1)
 numberOfProperty = int(parsedTextHeader[0])
 #print(numberOfProperty)
-numberOfProperty = numberOfProperty * 39
+numberOfProperty = numberOfProperty * 13
 
 #Looping through each row now
-#for x in range(0, numberOfProperty, 39):
-    #print(x)
-x = 39
-rowOne = tableSix.find_all('tr')[x+1]
-print(rowOne)
-pid = rowOne.find_all('td')[2]
+for x in range(0, numberOfProperty, 13):
+    print(x)
+#x = 13
+    rowOne = tableSix.find_all('tr')[x+1]
 
-type = rowOne.find_all('td')[4]
+    pid = rowOne.find_all('td')[2]
 
-status = rowOne.find_all('td')[6]
+    type = rowOne.find_all('td')[4]
 
-LRstatus = rowOne.find_all('td')[8]
+    status = rowOne.find_all('td')[6]
 
-owner = rowOne.find_all('td')[11]
+    LRstatus = rowOne.find_all('td')[8]
 
-mailingAddress = rowOne.find_all('td')[13]
+    owner = rowOne.find_all('td')[11]
 
-civicAddress = rowOne.find_all('td')[16]
+    mailingAddress = rowOne.find_all('td')[13]
 
-county = rowOne.find_all('td')[18]
+    civicAddress = rowOne.find_all('td')[16]
 
-area = rowOne.find_all('td')[20]
+    county = rowOne.find_all('td')[18]
 
-value = rowOne.find_all('td')[25]
+    area = rowOne.find_all('td')[20]
 
-#print(owner.text)
+    value = rowOne.find_all('td')[25]
+
+    print(area.text)
 
 #rowTwo = tableSix.find_all('tr')[57]
 #print(pid)
