@@ -1,6 +1,17 @@
 from bs4 import BeautifulSoup
 #import pandas as pd
 
+#function to remove whitespace
+def removeSpace(string):
+    return string.replace(" ", "")
+
+#function to remove empty lines
+def removeLine(text):
+    lines = text.split('\n')
+    non_empty_lines = filter(lambda line: line.strip() != '', lines)
+    return '\n'.join(non_empty_lines)
+    
+
 f =  open('webpages/A Y JACKSONCOURT.html')
 content = f.read()
 #soup = BeautifulSoup(content, 'html.parser')
@@ -28,33 +39,87 @@ numberOfProperty = int(parsedTextHeader[0])
 #print(numberOfProperty)
 numberOfProperty = numberOfProperty * 13
 
+csvString = ""
+
 #Looping through each row now
 for x in range(0, numberOfProperty, 13):
-    print(x)
+    #print(x)
 #x = 13
     rowOne = tableSix.find_all('tr')[x+1]
 
-    pid = rowOne.find_all('td')[2]
+    pid = (rowOne.find_all('td')[2]).text
+    pid = removeLine(pid)
+    csvString += pid
+    csvString += ","
 
-    type = rowOne.find_all('td')[4]
+    type = (rowOne.find_all('td')[4]).text
+    type = removeLine(type)
+    type = type.strip()
+    csvString += type
+    csvString += ","
 
-    status = rowOne.find_all('td')[6]
+    status = (rowOne.find_all('td')[6]).text
+    status = removeLine(status)
+    status = status.strip()
+    csvString += status
+    csvString += ","
 
-    LRstatus = rowOne.find_all('td')[8]
+    LRstatus = (rowOne.find_all('td')[8]).text
+    LRstatus = removeLine(LRstatus)
+    LRstatus = LRstatus.strip()
+    csvString += LRstatus
+    csvString += ","
 
-    owner = rowOne.find_all('td')[11]
+    owner = (rowOne.find_all('td')[11])
+    owner = str(owner)
+    owner = owner.replace("<br/>", ",")
+    owner = owner.replace("</td>", "")
+    owner = owner.replace("<td class=\"formValueSmall\">", "")
+    owner = owner.replace("\t", "")
+    owner = owner.replace("\n", "")
+    owner = removeLine(owner)
+    #owner = owner.strip()
+    #print(owner)
+    csvString += owner
+    csvString += ","
 
-    mailingAddress = rowOne.find_all('td')[13]
+    mailingAddress = (rowOne.find_all('td')[13]).text
+    mailingAddress = removeLine(mailingAddress)
+    mailingAddress = mailingAddress.replace("\t", "")
+    mailingAddress = mailingAddress.replace("\n", " ")
+    print(mailingAddress)
+    csvString += mailingAddress
+    csvString += ","
 
-    civicAddress = rowOne.find_all('td')[16]
+    civicAddress = (rowOne.find_all('td')[16]).text
+    civicAddress = removeLine(civicAddress)
+    civicAddress = civicAddress.replace("\t", "")
+    civicAddress = civicAddress.replace("\n", " ")
+    #print(civicAddress)
+    csvString += civicAddress
+    csvString += ","
 
-    county = rowOne.find_all('td')[18]
+    county = (rowOne.find_all('td')[18]).text
+    county = removeLine(county)
+    county = county.strip()
+    #print(county)
+    csvString += county
+    csvString += ";"
 
-    area = rowOne.find_all('td')[20]
+    area = (rowOne.find_all('td')[20]).text
+    area = removeLine(area)
+    area = area.strip()
+    csvString += county
+    csvString += ";"
 
-    value = rowOne.find_all('td')[25]
+    value = (rowOne.find_all('td')[25]).text
+    value = removeLine(value)
+    value = value.strip()
+    csvString += county
+    csvString += ";"
+    #print(csvString)
 
-    print(area.text)
-
-#rowTwo = tableSix.find_all('tr')[57]
-#print(pid)
+#saving csv format text to file
+file_path = 'sampleOutput.csv'
+with open(file_path, 'w', encoding='utf-8') as file:
+    file.write(csvString)
