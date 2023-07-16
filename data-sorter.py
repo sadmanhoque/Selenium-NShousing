@@ -12,7 +12,7 @@ def removeLine(text):
     return '\n'.join(non_empty_lines)
 
 #reading list of html files    
-path_of_the_directory= 'testing-webpages/'
+path_of_the_directory= 'webpages/'
 print("Files and directories in a specified path:")
 fileList = []
 for filename in os.listdir(path_of_the_directory):
