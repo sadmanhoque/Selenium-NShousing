@@ -55,7 +55,7 @@ for a in range(len(fileList)):
         numberOfProperty = numberOfProperty * 13
 
         csvString = ""
-
+        fileRow = []
         #Looping through each row now
         for x in range(0, numberOfProperty, 13):
             #print(x)
@@ -64,6 +64,7 @@ for a in range(len(fileList)):
 
             pid = (rowOne.find_all('td')[2]).text
             pid = removeLine(pid)
+            pid = pid.strip()
             rows.append(pid)
             csvString += pid
             csvString += ","
@@ -107,6 +108,7 @@ for a in range(len(fileList)):
             mailingAddress = removeLine(mailingAddress)
             mailingAddress = mailingAddress.replace("\t", "")
             mailingAddress = mailingAddress.replace("\n", " ")
+            mailingAddress = mailingAddress.strip()
             #print(mailingAddress)
             rows.append(mailingAddress)
             csvString += mailingAddress
@@ -116,6 +118,7 @@ for a in range(len(fileList)):
             civicAddress = removeLine(civicAddress)
             civicAddress = civicAddress.replace("\t", "")
             civicAddress = civicAddress.replace("\n", " ")
+            civicAddress = civicAddress.strip()
             #print(civicAddress)
             rows.append(civicAddress)
             csvString += civicAddress
@@ -151,6 +154,7 @@ for a in range(len(fileList)):
             csvString += value
             csvString += "\n"
             #print(csvString)
+            fileRow.append(rows)
 
         #appending to an existing blank csv file
         file1 = open("final.csv", "a")
@@ -158,14 +162,11 @@ for a in range(len(fileList)):
         file1.close()
 
         #appending as a csv content
-        finalRow = []
-        finalRow.append(rows)
-        print(finalRow)
         filename = "testing-csv-formats.csv"
         with open(filename, 'w') as csvfile:
             csvwriter = csv.writer(csvfile)
             #csvwriter.writerow(fields)
-            csvwriter.writerows(finalRow)
+            csvwriter.writerows(fileRow)
     except:
         #print("an error occured for file "+fileList[a])
         file1 = open("problem-streets", "a")
