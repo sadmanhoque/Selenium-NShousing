@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import os
+import csv
 
 #function to remove whitespace
 def removeSpace(string):
@@ -12,7 +13,7 @@ def removeLine(text):
     return '\n'.join(non_empty_lines)
 
 #reading list of html files    
-path_of_the_directory= 'webpages/'
+path_of_the_directory= 'testing-webpages/'
 print("Files and directories in a specified path:")
 fileList = []
 for filename in os.listdir(path_of_the_directory):
@@ -21,124 +22,152 @@ for filename in os.listdir(path_of_the_directory):
         print(f)
         fileList.append(f)
 
-#f =  open('webpages/A Y JACKSONCOURT.html')
+#Looping through every file in the dir
 for a in range(len(fileList)):
     f = open(fileList[a])
+    print(fileList[a])
     content = f.read()
     #soup = BeautifulSoup(content, 'html.parser')
     #print(soup.select('formValueSmall'))
 
     #going through all the table layers in the webpage until we get to the table with data
     soup = BeautifulSoup(content, 'lxml')
-    tableOne = soup.find_all('table')[1]
-    tableTwo = tableOne.find_all('tr')[0]
-    tableThree = tableTwo.find_all('td')[0]
-    tableFour = tableThree.find_all('table')[1]
-    tableFive = tableFour.find_all('tr')[2]
-    tableSix = tableFive.find_all('table')[0]
+    #Adding a try catch exception for blank pages when roads had nothing on them
+    try:
+        tableOne = soup.find_all('table')[1]
+        tableTwo = tableOne.find_all('tr')[0]
+        tableThree = tableTwo.find_all('td')[0]
+        tableFour = tableThree.find_all('table')[1]
+        tableFive = tableFour.find_all('tr')[2]
+        tableSix = tableFive.find_all('table')[0]
 
-    #This saves the data in tableSix, used for figuring out how to parse data
-    #tableSixFile = str(tableSix)
-    #file_path = 'testing-webpages/tableSix.html'
-    #with open(file_path, 'w', encoding='utf-8') as file:
-    #    file.write(tableSixFile) 
+        #This saves the data in tableSix, used for figuring out how to parse data
+        #tableSixFile = str(tableSix)
+        #file_path = 'testing-webpages/tableSix.html'
+        #with open(file_path, 'w', encoding='utf-8') as file:
+        #    file.write(tableSixFile) 
 
-    #Finding out how many properties are listed on this page
-    textHeader = (tableFour.find_all('tr')[1]).text
-    parsedTextHeader = textHeader.split(' ', 1)
-    numberOfProperty = int(parsedTextHeader[0])
-    #print(numberOfProperty)
-    numberOfProperty = numberOfProperty * 13
+        #Finding out how many properties are listed on this page
+        textHeader = (tableFour.find_all('tr')[1]).text
+        parsedTextHeader = textHeader.split(' ', 1)
+        numberOfProperty = int(parsedTextHeader[0])
+        #print(numberOfProperty)
+        numberOfProperty = numberOfProperty * 13
 
-    csvString = ""
+        csvString = ""
 
-    #Looping through each row now
-    for x in range(0, numberOfProperty, 13):
-        #print(x)
-    #x = 13
-        rowOne = tableSix.find_all('tr')[x+1]
+        #Looping through each row now
+        for x in range(0, numberOfProperty, 13):
+            #print(x)
+            rows = []
+            rowOne = tableSix.find_all('tr')[x+1]
 
-        pid = (rowOne.find_all('td')[2]).text
-        pid = removeLine(pid)
-        csvString += pid
-        csvString += ","
+            pid = (rowOne.find_all('td')[2]).text
+            pid = removeLine(pid)
+            rows.append(pid)
+            csvString += pid
+            csvString += ","
 
-        type = (rowOne.find_all('td')[4]).text
-        type = removeLine(type)
-        type = type.strip()
-        csvString += type
-        csvString += ","
+            type = (rowOne.find_all('td')[4]).text
+            type = removeLine(type)
+            type = type.strip()
+            rows.append(type)
+            csvString += type
+            csvString += ","
 
-        status = (rowOne.find_all('td')[6]).text
-        status = removeLine(status)
-        status = status.strip()
-        csvString += status
-        csvString += ","
+            status = (rowOne.find_all('td')[6]).text
+            status = removeLine(status)
+            status = status.strip()
+            rows.append(status)
+            csvString += status
+            csvString += ","
 
-        LRstatus = (rowOne.find_all('td')[8]).text
-        LRstatus = removeLine(LRstatus)
-        LRstatus = LRstatus.strip()
-        csvString += LRstatus
-        csvString += ","
+            LRstatus = (rowOne.find_all('td')[8]).text
+            LRstatus = removeLine(LRstatus)
+            LRstatus = LRstatus.strip()
+            rows.append(LRstatus)
+            csvString += LRstatus
+            csvString += ","
 
-        owner = (rowOne.find_all('td')[11])
-        owner = str(owner)
-        owner = owner.replace("<br/>", " | ")
-        owner = owner.replace("</td>", "")
-        owner = owner.replace("<td class=\"formValueSmall\">", "")
-        owner = owner.replace("\t", "")
-        owner = owner.replace("\n", " ")
-        owner = removeLine(owner)
-        #owner = owner.strip()
-        #print(owner)
-        csvString += owner
-        csvString += ","
+            owner = (rowOne.find_all('td')[11])
+            owner = str(owner)
+            owner = owner.replace("<br/>", " | ")
+            owner = owner.replace("</td>", "")
+            owner = owner.replace("<td class=\"formValueSmall\">", "")
+            owner = owner.replace("\t", "")
+            owner = owner.replace("\n", " ")
+            owner = removeLine(owner)
+            owner = owner.strip()
+            rows.append(owner)
+            #print(owner)
+            csvString += owner
+            csvString += ","
 
-        mailingAddress = (rowOne.find_all('td')[13]).text
-        mailingAddress = removeLine(mailingAddress)
-        mailingAddress = mailingAddress.replace("\t", "")
-        mailingAddress = mailingAddress.replace("\n", " ")
-        #print(mailingAddress)
-        csvString += mailingAddress
-        csvString += ","
+            mailingAddress = (rowOne.find_all('td')[13]).text
+            mailingAddress = removeLine(mailingAddress)
+            mailingAddress = mailingAddress.replace("\t", "")
+            mailingAddress = mailingAddress.replace("\n", " ")
+            #print(mailingAddress)
+            rows.append(mailingAddress)
+            csvString += mailingAddress
+            csvString += ","
 
-        civicAddress = (rowOne.find_all('td')[16]).text
-        civicAddress = removeLine(civicAddress)
-        civicAddress = civicAddress.replace("\t", "")
-        civicAddress = civicAddress.replace("\n", " ")
-        #print(civicAddress)
-        csvString += civicAddress
-        csvString += ","
+            civicAddress = (rowOne.find_all('td')[16]).text
+            civicAddress = removeLine(civicAddress)
+            civicAddress = civicAddress.replace("\t", "")
+            civicAddress = civicAddress.replace("\n", " ")
+            #print(civicAddress)
+            rows.append(civicAddress)
+            csvString += civicAddress
+            csvString += ","
 
-        county = (rowOne.find_all('td')[18]).text
-        county = removeLine(county)
-        county = county.strip()
-        #print(county)
-        csvString += county
-        csvString += ","
+            county = (rowOne.find_all('td')[18]).text
+            county = removeLine(county)
+            county = county.strip()
+            #print(county)
+            rows.append(county)
+            csvString += county
+            csvString += ","
 
-        area = (rowOne.find_all('td')[20]).text
-        area = removeLine(area)
-        area = area.strip()
-        area = area.replace("SQUARE METERS", "")
-        area = area.replace("\n", "")
-        area = area.replace("\t", "")
-        #print(area)
-        csvString += area
-        csvString += ","
+            area = (rowOne.find_all('td')[20]).text
+            area = removeLine(area)
+            area = area.strip()
+            area = area.replace("SQUARE METERS", "")
+            area = area.replace("\n", "")
+            area = area.replace("\t", "")
+            #print(area)
+            rows.append(area)
+            csvString += area
+            csvString += ","
 
-        value = (rowOne.find_all('td')[25]).text
-        value = removeLine(value)
-        value = value.strip()
-        value = value.replace(" (2023 RESIDENTIAL TAXABLE)", "")
-        value = value.replace("$", "")
-        value = value.replace(",", "")
-        #print(value)
-        csvString += value
-        csvString += "\n"
-        #print(csvString)
+            value = (rowOne.find_all('td')[25]).text
+            value = removeLine(value)
+            value = value.strip()
+            value = value.replace(" (2023 RESIDENTIAL TAXABLE)", "")
+            value = value.replace("$", "")
+            value = value.replace(",", "")
+            #print(value)
+            rows.append(value)
+            csvString += value
+            csvString += "\n"
+            #print(csvString)
 
-    #appending to an existing blank csv file
-    file1 = open("sampleOutput.csv", "a")
-    file1.write(csvString)
-    file1.close()
+        #appending to an existing blank csv file
+        file1 = open("final.csv", "a")
+        file1.write(csvString)
+        file1.close()
+
+        #appending as a csv content
+        finalRow = []
+        finalRow.append(rows)
+        print(finalRow)
+        filename = "testing-csv-formats.csv"
+        with open(filename, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            #csvwriter.writerow(fields)
+            csvwriter.writerows(finalRow)
+    except:
+        #print("an error occured for file "+fileList[a])
+        file1 = open("problem-streets", "a")
+        file1.write(fileList[a]+"\n")
+        file1.close()
