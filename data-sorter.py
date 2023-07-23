@@ -58,7 +58,6 @@ for a in range(len(fileList)):
         fileRow = []
         #Looping through each row now
         for x in range(0, numberOfProperty, 13):
-            #print(x)
             rows = []
             rowOne = tableSix.find_all('tr')[x+1]
 
@@ -99,8 +98,8 @@ for a in range(len(fileList)):
             owner = owner.replace("\n", " ")
             owner = removeLine(owner)
             owner = owner.strip()
+            owner = owner[:-3]
             rows.append(owner)
-            #print(owner)
             csvString += owner
             csvString += ","
 
@@ -109,7 +108,6 @@ for a in range(len(fileList)):
             mailingAddress = mailingAddress.replace("\t", "")
             mailingAddress = mailingAddress.replace("\n", " ")
             mailingAddress = mailingAddress.strip()
-            #print(mailingAddress)
             rows.append(mailingAddress)
             csvString += mailingAddress
             csvString += ","
@@ -119,7 +117,6 @@ for a in range(len(fileList)):
             civicAddress = civicAddress.replace("\t", "")
             civicAddress = civicAddress.replace("\n", " ")
             civicAddress = civicAddress.strip()
-            #print(civicAddress)
             rows.append(civicAddress)
             csvString += civicAddress
             csvString += ","
@@ -127,7 +124,6 @@ for a in range(len(fileList)):
             county = (rowOne.find_all('td')[18]).text
             county = removeLine(county)
             county = county.strip()
-            #print(county)
             rows.append(county)
             csvString += county
             csvString += ","
@@ -138,7 +134,6 @@ for a in range(len(fileList)):
             area = area.replace("SQUARE METERS", "")
             area = area.replace("\n", "")
             area = area.replace("\t", "")
-            #print(area)
             rows.append(area)
             csvString += area
             csvString += ","
@@ -149,21 +144,23 @@ for a in range(len(fileList)):
             value = value.replace(" (2023 RESIDENTIAL TAXABLE)", "")
             value = value.replace("$", "")
             value = value.replace(",", "")
-            #print(value)
             rows.append(value)
             csvString += value
             csvString += "\n"
-            #print(csvString)
-            fileRow.append(rows)
+            
+            #Making it so that each row has only one owner
+            ownerTest = rows[4].split("|")
+            print(ownerTest)
+            if len(ownerTest) > 0:
+                
+                newRow = rows
 
-        #appending to an existing blank csv file
-        file1 = open("final.csv", "a")
-        file1.write(csvString)
-        file1.close()
+
+            fileRow.append(rows)
 
         #appending as a csv content
         filename = "testing-csv-formats.csv"
-        with open(filename, 'w') as csvfile:
+        with open(filename, 'a') as csvfile:
             csvwriter = csv.writer(csvfile)
             #csvwriter.writerow(fields)
             csvwriter.writerows(fileRow)
