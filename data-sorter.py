@@ -149,21 +149,25 @@ for a in range(len(fileList)):
             csvString += "\n"
             
             fileRow.append(rows)
-            
+            print(fileRow)
             #Making it so that each row has only one owner
             ownerList = rows[4].split("|")
             #print(ownerList)
-            x = 0
-            while len(ownerList) > 0:
-                newRow = rows
-                newRow[4] = ownerList[x]
-                ownerList.remove(ownerList[x])
-                fileRow.append(newRow)
-                x+=1
+            #x = 0
+            #if len(ownerList) > 1:
+            #    while len(ownerList) > 0:
+            #        newRow = rows
+            #        newRow[4] = ownerList[x]
+            #        #print(newRow)
+            #        ownerList.remove(ownerList[x])
+                    #fileRow.append(newRow)
+            #        x+=1
+            #else:
+                #fileRow.append(rows)
             
-            print(fileRow)
+            #print(fileRow)
 
-        #appending as a csv content
+        #appending as a csv content\
         filename = "testing-csv-formats.csv"
         with open(filename, 'a') as csvfile:
             csvwriter = csv.writer(csvfile)
@@ -171,6 +175,6 @@ for a in range(len(fileList)):
             csvwriter.writerows(fileRow)
     except:
         #print("an error occured for file "+fileList[a])
-        file1 = open("problem-streets", "a")
+        file1 = open("problem-streets", "w")
         file1.write(fileList[a]+"\n")
         file1.close()
