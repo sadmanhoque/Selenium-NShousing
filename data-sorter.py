@@ -148,15 +148,20 @@ for a in range(len(fileList)):
             csvString += value
             csvString += "\n"
             
-            #Making it so that each row has only one owner
-            ownerTest = rows[4].split("|")
-            print(ownerTest)
-            if len(ownerTest) > 0:
-                
-                newRow = rows
-
-
             fileRow.append(rows)
+            
+            #Making it so that each row has only one owner
+            ownerList = rows[4].split("|")
+            #print(ownerList)
+            #x = 0
+            #while len(ownerList) > 0:
+            #    newRow = rows
+            #    newRow[4] = ownerList[x]
+            #    ownerList.remove(ownerList[x])
+            #    fileRow.append(newRow)
+            #    x+=1
+            
+            #print(fileRow)
 
         #appending as a csv content
         filename = "testing-csv-formats.csv"
