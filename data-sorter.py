@@ -1,25 +1,10 @@
 from bs4 import BeautifulSoup
 import os
 import csv
-
-#function to save content to a file
-def fileWriter(fileName, content):
-    file1 = open(fileName, "w")
-    file1.write(content)
-    file1.close()
-
-#function to remove whitespace
-def removeSpace(string):
-    return string.replace(" ", "")
-
-#function to remove empty lines
-def removeLine(text):
-    lines = text.split('\n')
-    non_empty_lines = filter(lambda line: line.strip() != '', lines)
-    return '\n'.join(non_empty_lines)
+from util import coordinateFinder, removeSpace, removeLine, fileWriter
 
 #reading list of html files    
-path_of_the_directory= 'webpages/'
+path_of_the_directory= 'testing-webpages/'
 print("Files and directories in a specified path:")
 fileList = []
 for filename in os.listdir(path_of_the_directory):
@@ -58,7 +43,7 @@ for a in range(len(fileList)):
             numberOfProperty = 250
         numberOfProperty = numberOfProperty * 13
 
-        csvString = ""
+        
         fileRow = []
         #Looping through each row now
         for x in range(0, numberOfProperty, 13):
@@ -69,29 +54,21 @@ for a in range(len(fileList)):
             pid = removeLine(pid)
             pid = pid.strip()
             rows.append(pid)
-            csvString += pid
-            csvString += ","
 
             type = (rowOne.find_all('td')[4]).text
             type = removeLine(type)
             type = type.strip()
             rows.append(type)
-            csvString += type
-            csvString += ","
 
             status = (rowOne.find_all('td')[6]).text
             status = removeLine(status)
             status = status.strip()
             rows.append(status)
-            csvString += status
-            csvString += ","
 
             LRstatus = (rowOne.find_all('td')[8]).text
             LRstatus = removeLine(LRstatus)
             LRstatus = LRstatus.strip()
             rows.append(LRstatus)
-            csvString += LRstatus
-            csvString += ","
 
             owner = (rowOne.find_all('td')[11])
             owner = str(owner)
@@ -104,8 +81,6 @@ for a in range(len(fileList)):
             owner = owner.strip()
             owner = owner[:-3]
             rows.append(owner)
-            csvString += owner
-            csvString += ","
 
             mailingAddress = (rowOne.find_all('td')[13]).text
             mailingAddress = removeLine(mailingAddress)
@@ -113,8 +88,6 @@ for a in range(len(fileList)):
             mailingAddress = mailingAddress.replace("\n", " ")
             mailingAddress = mailingAddress.strip()
             rows.append(mailingAddress)
-            csvString += mailingAddress
-            csvString += ","
 
             civicAddress = (rowOne.find_all('td')[16]).text
             civicAddress = removeLine(civicAddress)
@@ -122,15 +95,13 @@ for a in range(len(fileList)):
             civicAddress = civicAddress.replace("\n", " ")
             civicAddress = civicAddress.strip()
             rows.append(civicAddress)
-            csvString += civicAddress
-            csvString += ","
+
+            rows.append(coordinateFinder(civicAddress))
 
             county = (rowOne.find_all('td')[18]).text
             county = removeLine(county)
             county = county.strip()
-            rows.append(county)
-            csvString += county
-            csvString += ","
+            rows.append(county)  
 
             area = (rowOne.find_all('td')[20]).text
             area = removeLine(area)
@@ -139,8 +110,6 @@ for a in range(len(fileList)):
             area = area.replace("\n", "")
             area = area.replace("\t", "")
             rows.append(area)
-            csvString += area
-            csvString += ","
 
             value = (rowOne.find_all('td')[25]).text
             value = removeLine(value)
@@ -149,30 +118,28 @@ for a in range(len(fileList)):
             value = value.replace("$", "")
             value = value.replace(",", "")
             rows.append(value)
-            csvString += value
-            csvString += "\n"
             
-            #fileRow.append(rows)
+            fileRow.append(rows)
 
             #Making it so that each row has only one owner
-            ownerList = rows[4].split("|")
+            #ownerList = rows[4].split("|")
             #print(ownerList)
-            ownerCount = 0
-            if len(ownerList) > 1:
-                while len(ownerList) > 0:
-                    newRow = rows
-                    newRow[4] = ownerList[ownerCount]
-                    newRow[4] = newRow[4].strip()
-                    fileRow.append(newRow)
-                    ownerList.remove(ownerList[ownerCount])
-                    ownerCount=-1 
-            else:
-                fileRow.append(rows)
+            #ownerCount = 0
+            #if len(ownerList) > 1:
+            #    while len(ownerList) > 0:
+            #        newRow = rows
+            #        newRow[4] = ownerList[ownerCount]
+            #        newRow[4] = newRow[4].strip()
+            #        fileRow.append(newRow)
+            #        ownerList.remove(ownerList[ownerCount])
+            #        ownerCount=-1 
+            #else:
+            #    fileRow.append(rows)
             
             #print(fileRow)
 
         #appending as a csv content\
-        filename = "testing-csv-formats.csv"
+        filename = "test-output.csv"
         with open(filename, 'a') as csvfile:
             csvwriter = csv.writer(csvfile)
             #csvwriter.writerow(fields)
