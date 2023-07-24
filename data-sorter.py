@@ -27,8 +27,6 @@ for a in range(len(fileList)):
     f = open(fileList[a])
     print(fileList[a])
     content = f.read()
-    #soup = BeautifulSoup(content, 'html.parser')
-    #print(soup.select('formValueSmall'))
 
     #going through all the table layers in the webpage until we get to the table with data
     soup = BeautifulSoup(content, 'lxml')
@@ -40,12 +38,6 @@ for a in range(len(fileList)):
         tableFour = tableThree.find_all('table')[1]
         tableFive = tableFour.find_all('tr')[2]
         tableSix = tableFive.find_all('table')[0]
-
-        #This saves the data in tableSix, used for figuring out how to parse data
-        #tableSixFile = str(tableSix)
-        #file_path = 'testing-webpages/tableSix.html'
-        #with open(file_path, 'w', encoding='utf-8') as file:
-        #    file.write(tableSixFile) 
 
         #Finding out how many properties are listed on this page
         textHeader = (tableFour.find_all('tr')[1]).text
@@ -148,22 +140,22 @@ for a in range(len(fileList)):
             csvString += value
             csvString += "\n"
             
-            fileRow.append(rows)
-            print(fileRow)
+            #fileRow.append(rows)
+
             #Making it so that each row has only one owner
             ownerList = rows[4].split("|")
             #print(ownerList)
-            #x = 0
-            #if len(ownerList) > 1:
-            #    while len(ownerList) > 0:
-            #        newRow = rows
-            #        newRow[4] = ownerList[x]
-            #        #print(newRow)
-            #        ownerList.remove(ownerList[x])
-                    #fileRow.append(newRow)
-            #        x+=1
-            #else:
-                #fileRow.append(rows)
+            ownerCount = 0
+            if len(ownerList) > 1:
+                while len(ownerList) > 0:
+                    newRow = rows
+                    newRow[4] = ownerList[ownerCount]
+                    newRow[4] = newRow[4].strip()
+                    fileRow.append(newRow)
+                    ownerList.remove(ownerList[ownerCount])
+                    ownerCount=-1 
+            else:
+                fileRow.append(rows)
             
             #print(fileRow)
 
@@ -173,8 +165,8 @@ for a in range(len(fileList)):
             csvwriter = csv.writer(csvfile)
             #csvwriter.writerow(fields)
             csvwriter.writerows(fileRow)
-    except:
-        #print("an error occured for file "+fileList[a])
-        file1 = open("problem-streets", "w")
-        file1.write(fileList[a]+"\n")
-        file1.close()
+    except Exception as e: 
+        print(e)
+        #file1 = open("problem-streets", "w")
+        #file1.write(fileList[a]+"\n")
+        #file1.close()
