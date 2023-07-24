@@ -2,6 +2,12 @@ from bs4 import BeautifulSoup
 import os
 import csv
 
+#function to save content to a file
+def fileWriter(fileName, content):
+    file1 = open(fileName, "w")
+    file1.write(content)
+    file1.close()
+
 #function to remove whitespace
 def removeSpace(string):
     return string.replace(" ", "")
@@ -13,7 +19,7 @@ def removeLine(text):
     return '\n'.join(non_empty_lines)
 
 #reading list of html files    
-path_of_the_directory= 'testing-webpages/'
+path_of_the_directory= 'webpages/'
 print("Files and directories in a specified path:")
 fileList = []
 for filename in os.listdir(path_of_the_directory):
@@ -43,7 +49,8 @@ for a in range(len(fileList)):
         textHeader = (tableFour.find_all('tr')[1]).text
         parsedTextHeader = textHeader.split(' ', 1)
         numberOfProperty = int(parsedTextHeader[0])
-        #print(numberOfProperty)
+        if numberOfProperty > 250:
+            numberOfProperty = 250
         numberOfProperty = numberOfProperty * 13
 
         csvString = ""
@@ -167,6 +174,6 @@ for a in range(len(fileList)):
             csvwriter.writerows(fileRow)
     except Exception as e: 
         print(e)
-        #file1 = open("problem-streets", "w")
-        #file1.write(fileList[a]+"\n")
-        #file1.close()
+        file1 = open("problem-streets", "w")
+        file1.write(fileList[a]+"\n")
+        file1.close()
