@@ -36,8 +36,13 @@ for a in range(len(fileList)):
 
     #going through all the table layers in the webpage until we get to the table with data
     soup = BeautifulSoup(content, 'lxml')
-    #Adding a try catch exception for blank pages when roads had nothing on them
+    #Adding a try catch exception for pages with some sort of error in 'em
     try:
+        
+        #Skipping if it's a blank page
+        if len(soup.find_all('table')) == 0:
+            continue
+
         tableOne = soup.find_all('table')[1]
         tableTwo = tableOne.find_all('tr')[0]
         tableThree = tableTwo.find_all('td')[0]
