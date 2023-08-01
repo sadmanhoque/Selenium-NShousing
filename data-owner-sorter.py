@@ -118,11 +118,26 @@ for a in range(len(fileList)):
             value = value.replace("$", "")
             value = value.replace(",", "")
             rows.append(value)
+
+            #Making it so that each row has only one owner
+            ownerList = rows[4].split("|")
+            print(ownerList)
+            ownerCount = len(ownerList)
+            if len(ownerList) > 1:
+                while len(ownerList) > 0:
+                    newRow = rows
+                    newRow[4] = ownerList[ownerCount]
+                    newRow[4] = newRow[4].strip()
+                    fileRow.append(newRow)
+                    ownerList.remove(ownerList[ownerCount])
+                    ownerCount=-1 
+            else:
+                fileRow.append(rows)
             
-            fileRow.append(rows)
+            print(fileRow)
 
         #appending as a csv content\
-        filename = "testing-property-list.csv"
+        filename = "testing-owner-list.csv"
         with open(filename, 'a') as csvfile:
             csvwriter = csv.writer(csvfile)
             #csvwriter.writerow(fields)
